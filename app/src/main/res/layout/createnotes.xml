@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/addNotesMeggage"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Your First Note Here"
+
+        android:gravity="center"
+        android:textSize="20sp"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Note"
+        android:textSize="25sp"
+        android:textColor="@color/purple_700"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/firstNote"
+        android:padding="10dp"
+        />
+
+</LinearLayout>
+</androidx.cardview.widget.CardView>
