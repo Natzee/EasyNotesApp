@@ -1,4 +1,4 @@
-package com.example.easynotes
+package com.example.easynotes.util
 
 object Constant {
 

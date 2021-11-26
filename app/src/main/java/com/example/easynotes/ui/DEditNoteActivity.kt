@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,29 +18,22 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
-import com.example.easynotes.Constant.EXISTING_NOTE
-import com.example.easynotes.Constant.IS_EMPTY
-import com.example.easynotes.Constant.IS_EXISTS
-import com.example.easynotes.Constant.IS_MODIFIED
-import com.example.easynotes.Constant.IS_SECRET_MODE
-import com.example.easynotes.Constant.ITEM_POSITION
-import com.example.easynotes.Constant.NEW_NOTE
-import com.example.easynotes.Constant.NOTE
+import com.example.easynotes.util.Constant.EXISTING_NOTE
+import com.example.easynotes.util.Constant.IS_EMPTY
+import com.example.easynotes.util.Constant.IS_EXISTS
+import com.example.easynotes.util.Constant.IS_MODIFIED
+import com.example.easynotes.util.Constant.IS_SECRET_MODE
+import com.example.easynotes.util.Constant.ITEM_POSITION
+import com.example.easynotes.util.Constant.NEW_NOTE
+import com.example.easynotes.util.Constant.NOTE
 import com.example.easynotes.R
 import com.example.easynotes.data.Note
 import com.example.easynotes.util.getDate
 import com.example.easynotes.util.getTime
-import com.example.easynotes.util.isToday
-import com.example.easynotes.util.isYesterday
 import com.yahiaangelo.markdownedittext.MarkdownEditText
 import com.yahiaangelo.markdownedittext.MarkdownStylesBar
 import java.util.*
-import com.example.easynotes.Constant.ADD_NOTE_MESSAGE
-import com.example.easynotes.Constant.DELETE_NOTE_MESSAGE
-import com.example.easynotes.Constant.EDIT_NOTE_TOOL_BAR_NAME
-import com.example.easynotes.Constant.EMPTY_NOTE_MESSAGE
-import com.example.easynotes.Constant.UNCHANGED_NOTES_MESSAGE
-import com.example.easynotes.Constant.UPDATE_NOTE_MESSAGE
+import com.example.easynotes.util.Constant.EDIT_NOTE_TOOL_BAR_NAME
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 
