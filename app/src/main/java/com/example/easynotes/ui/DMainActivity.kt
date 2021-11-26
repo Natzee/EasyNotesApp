@@ -66,12 +66,18 @@ import com.example.easynotes.data.Note
 import com.example.easynotes.interfaces.ClickableInterface
 import com.example.easynotes.interfaces.ViewModelListener
 import com.example.easynotes.util.Constant
+import com.example.easynotes.util.Constant.MENU_LOCK
+import com.example.easynotes.util.Constant.MENU_PIN
+import com.example.easynotes.util.Constant.MENU_SELECT
+import com.example.easynotes.util.Constant.MENU_UNLOCK
+import com.example.easynotes.util.Constant.MENU_UNPIN
+import com.example.easynotes.util.Constant.MENU_UNSELECT
 import com.example.easynotes.viewmodel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 
-class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener {
+class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener {
 
     private var setPos = ArrayList<Int>()
 
@@ -90,7 +96,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
 
     //menu
-    private var menuItem  :MenuItem? = null
+    private var menuItem: MenuItem? = null
 
     //setting up views
     private lateinit var addNoteFAB: FloatingActionButton
@@ -144,8 +150,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         noteViewModel = ViewModelProvider(this)[NotesViewModel::class.java]
 
 
-
-
         //initializing list
         noteList = ArrayList()
         secretNoteList = ArrayList()
@@ -157,7 +161,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
 
 
-        noteViewModel.getNotes().observe(this,{
+        noteViewModel.getNotes().observe(this, {
             noteList.addAll(it)
             //getting user preference with default value
             viewType = userPreference.getInt(VIEW_TYPE, GRID_VIEW)
@@ -171,11 +175,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         })
 
 
-
-
-
-
-
         //on clicking this button it will go to edit notes
         addNoteFAB.setOnClickListener {
             createNote()
@@ -187,7 +186,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         notesContainer.addItemDecoration(SpacingDecorator())
 
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -246,7 +244,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
 
             }
-
 
 
         }
@@ -346,11 +343,10 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
                 //add note to  db
                 //coroutine implementation required here
 
-                lifecycleScope.launch { noteViewModel.addNote(note,this@DMainActivity) }
+                lifecycleScope.launch { noteViewModel.addNote(note, this@DMainActivity) }
 
 
-            }
-            else{
+            } else {
                 Toast.makeText(this, Constant.EMPTY_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
             }
 
@@ -375,11 +371,21 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
                 //check for mode to delete from respective list if empty note
                 if (currentMode == NORMAL_MODE) {
-                    lifecycleScope.launch {  noteViewModel.deleteNote(normalNoteList[positionOfItem].id,this@DMainActivity)}
+                    lifecycleScope.launch {
+                        noteViewModel.deleteNote(
+                            normalNoteList[positionOfItem].id,
+                            this@DMainActivity
+                        )
+                    }
 
                     normalNoteList.removeAt(positionOfItem)
                 } else {
-                    lifecycleScope.launch { noteViewModel.deleteNote(secretNoteList[positionOfItem].id,this@DMainActivity) }
+                    lifecycleScope.launch {
+                        noteViewModel.deleteNote(
+                            secretNoteList[positionOfItem].id,
+                            this@DMainActivity
+                        )
+                    }
 
                     secretNoteList.removeAt(positionOfItem)
                 }
@@ -437,17 +443,15 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
                     if (!isEmptyNote) {
 
-                        lifecycleScope.launch { noteViewModel.updateNote(note,this@DMainActivity) }
+                        lifecycleScope.launch { noteViewModel.updateNote(note, this@DMainActivity) }
 
-                    }
-                    else{
+                    } else {
                         Toast.makeText(this, Constant.EMPTY_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
                     }
 
 
-                }
-                else{
-                    Toast.makeText(this, UNCHANGED_NOTES_MESSAGE,Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, UNCHANGED_NOTES_MESSAGE, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -459,7 +463,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
     }
 
     private fun displayNotes() {
-
 
 
         //check which mode so that we can display particular mode notes
@@ -524,18 +527,22 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
 
                 //check whether any text is search
-                if (newText!!.isNotEmpty()) {
+                if (newText!!.trim().isNotEmpty()) {
                     //clear recycler view items so that previous searched won't be displayed
                     recyclerViewNoteList.clear()
                     noteList.forEach {
-                        if (it.title.contains(newText,ignoreCase =true) || it.notes.contains(newText,ignoreCase = true)) {
-                            Log.i("Note","yes ${it.title} ${it.notes}")
+                        if (it.title.contains(newText, ignoreCase = true) || it.notes.contains(
+                                newText,
+                                ignoreCase = true
+                            )
+                        ) {
+
                             noResult.visibility = View.GONE
                             notesContainer.visibility = View.VISIBLE
                             if (!recyclerViewNoteList.contains(it)) recyclerViewNoteList.add(it)
 
                         } else {
-                            Log.i("Note","No ${it.notes}")
+
                             if (recyclerViewNoteList.isEmpty()) {
                                 noResult.visibility = View.VISIBLE
                                 notesContainer.visibility = View.GONE
@@ -546,7 +553,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
                 } else {
                     //if there is no text available just display all list
-                    Log.i("Note","Never")
+
                     notesContainer.visibility = View.VISIBLE
                     noResult.visibility = View.GONE
                     recyclerViewNoteList.clear()
@@ -612,9 +619,9 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
             mode.title = "1 Item Selected"
 
-            when(currentMode){
-                NORMAL_MODE -> mode.menu.findItem(R.id.lock).title = "Lock"
-                SECRET_MODE -> mode.menu.findItem(R.id.lock).title = "Un Lock"
+            when (currentMode) {
+                NORMAL_MODE -> mode.menu.findItem(R.id.lock).title = MENU_LOCK
+                SECRET_MODE -> mode.menu.findItem(R.id.lock).title = MENU_UNLOCK
             }
             return true
         }
@@ -684,29 +691,27 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
                     true
                 }
 
-                R.id.allselect ->{
+                R.id.allselect -> {
 
                     val p = setPos
-                    if(item.title == "DeSelect"){
-                        item.title = "Select"
-                        item.icon=ResourcesCompat.getDrawable(resources, R.drawable.selectall, null)
+                    if (item.title == MENU_UNSELECT) {
+                        item.title = MENU_SELECT
+                        item.icon =
+                            ResourcesCompat.getDrawable(resources, R.drawable.selectall, null)
                         mode!!.finish()
 
 
+                    } else {
+                        item.title = MENU_UNSELECT
+                        item.icon =
+                            ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
 
-
-
-                    }
-
-                    else{
-                        item.title = "DeSelect"
-                        item.icon=ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
-
-                        for(i in 0 until recyclerViewNoteList.size){
-                            if(!p.contains(i)) {
-                                onNotesClickListener(i,true)
+                        for (i in 0 until recyclerViewNoteList.size) {
+                            if (!p.contains(i)) {
+                                onNotesClickListener(i, true)
                                 NotesAdapter.view.add(notesContainer.getChildAt(i))
-                                notesContainer.getChildAt(i).background = resources.getDrawable(R.color.transparent, null)
+                                notesContainer.getChildAt(i).background =
+                                    resources.getDrawable(R.color.transparent, null)
                             }
 
                         }
@@ -716,7 +721,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
                     true
                 }
-
 
 
                 else -> {
@@ -749,7 +753,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         if (keyGuardManger.isDeviceSecure) {
             val intent = keyGuardManger.createConfirmDeviceCredentialIntent(
                 "Authentication required",
-                "password"
+                "Password"
             )
             getActivityResult.launch(intent)
 
@@ -766,15 +770,12 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
             openSecretNotes()
 
-        } else {
-
-            Toast.makeText(this, "Invalid Authentication", Toast.LENGTH_SHORT).show()
         }
     }
 
 
     override fun onNotesClickListener(position: Int, isLongPress: Boolean) {
-        Log.i("Letsfind","second")
+
 
         //check whether recycler view in multiple selection state
         if (isLongPress) {
@@ -786,23 +787,23 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
                 noteList.clear()
             }
 
-            if (!noteList.contains(recyclerViewNoteList[position])) noteList.add(recyclerViewNoteList[position]
+            if (!noteList.contains(recyclerViewNoteList[position])) noteList.add(
+                recyclerViewNoteList[position]
             )
             else noteList.remove(recyclerViewNoteList[position])
 
-            if(noteList.size == recyclerViewNoteList.size) {
+            if (noteList.size == recyclerViewNoteList.size) {
                 actionMode!!.menu.findItem(R.id.allselect).icon =
                     ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
-                actionMode!!.menu.findItem(R.id.allselect).title = "DeSelect"
+                actionMode!!.menu.findItem(R.id.allselect).title = MENU_UNSELECT
             }
 
-           if (noteList.isEmpty()) {
-               actionMode!!.finish()
+            if (noteList.isEmpty()) {
+                actionMode!!.finish()
             } else {
                 actionMode!!.title = "${noteList.size} Item Selected"
 
             }
-
 
 
             var flag = false
@@ -811,13 +812,13 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
                     flag = true
                     actionMode!!.menu.findItem(R.id.pin).icon =
                         ResourcesCompat.getDrawable(resources, R.drawable.pin, null)
-                    actionMode!!.menu.findItem(R.id.pin).title = "Pin"
+                    actionMode!!.menu.findItem(R.id.pin).title = MENU_PIN
                     pinnedIconState = true
                 } else {
                     if (!flag) {
                         actionMode!!.menu.findItem(R.id.pin).icon =
                             ResourcesCompat.getDrawable(resources, R.drawable.unpin, null)
-                        actionMode!!.menu.findItem(R.id.pin).title = "Un Pin"
+                        actionMode!!.menu.findItem(R.id.pin).title = MENU_UNPIN
                         pinnedIconState = false
                     }
                 }
@@ -869,11 +870,12 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         //delete note in db
         //coroutine implementation required
         actionMode!!.finish()
-        lifecycleScope.launch { for (i in noteList) {
+        lifecycleScope.launch {
+            for (i in noteList) {
 
 
-            noteViewModel.deleteNote(i.id,this@DMainActivity)
-        }
+                noteViewModel.deleteNote(i.id, this@DMainActivity)
+            }
             noteList.clear()
         }
 
@@ -924,8 +926,8 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         //coroutine implementation required
         lifecycleScope.launch {
             for (i in noteList) {
-            noteViewModel.updateNote(i,this@DMainActivity)
-        }
+                noteViewModel.updateNote(i, this@DMainActivity)
+            }
             noteList.clear()
         }
 
@@ -994,10 +996,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
         }
         //update note in db
         //coroutine implementation required
-        lifecycleScope.launch {for (i in noteList) {
+        lifecycleScope.launch {
+            for (i in noteList) {
 
-            noteViewModel.updateNote(i,this@DMainActivity)
-        }
+                noteViewModel.updateNote(i, this@DMainActivity)
+            }
             noteList.clear()
         }
 
@@ -1093,18 +1096,18 @@ class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener 
 
     override fun success(result: Boolean, operation: NotesDbOperation) {
 
-        when(operation){
-            NotesDbOperation.ADD->{
-                    if(result) Toast.makeText(this, ADD_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
-                else Toast.makeText(this, FAILED_ADD_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+        when (operation) {
+            NotesDbOperation.ADD -> {
+                if (result) Toast.makeText(this, ADD_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_ADD_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
             }
-            NotesDbOperation.UPDATE ->{
-                if(result) Toast.makeText(this, UPDATE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
-                else Toast.makeText(this, FAILED_UPDATE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+            NotesDbOperation.UPDATE -> {
+                if (result) Toast.makeText(this, UPDATE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_UPDATE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
             }
-            NotesDbOperation.DELETE ->{
-                if(result) Toast.makeText(this, DELETE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
-                else Toast.makeText(this, FAILED_DELETE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+            NotesDbOperation.DELETE -> {
+                if (result) Toast.makeText(this, DELETE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_DELETE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
             }
 
 

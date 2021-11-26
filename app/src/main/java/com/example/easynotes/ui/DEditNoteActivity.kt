@@ -7,7 +7,6 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,7 +48,7 @@ class DEditNoteActivity : AppCompatActivity() {
     private var isTitleFocused = false
     private var isContentFocused = false
 
-    private var len : Int = 0
+    private var len: Int = 0
 
     //private var isContentClicked = false
     private lateinit var note: Note
@@ -59,7 +58,7 @@ class DEditNoteActivity : AppCompatActivity() {
     private lateinit var content: MarkdownEditText
     private lateinit var noteCreated: TextView
     private lateinit var stylesBar: MarkdownStylesBar
-    private lateinit var characterCount : TextView
+    private lateinit var characterCount: TextView
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -72,7 +71,7 @@ class DEditNoteActivity : AppCompatActivity() {
 
         title = findViewById(R.id.title)
         content = findViewById(R.id.content)
-        noteCreated= findViewById(R.id.noteCreated)
+        noteCreated = findViewById(R.id.noteCreated)
         characterCount = findViewById(R.id.characterCount)
 
 
@@ -96,16 +95,15 @@ class DEditNoteActivity : AppCompatActivity() {
 
             content.renderMD(note.notes)
 
-            val tempNote = note.notes.replace(" ","")
+            val tempNote = note.notes.replace(" ", "")
 
 
-            characterCount.text=(tempNote.length).toString()
+            characterCount.text = (tempNote.length).toString()
 
             val date = note.createdDate.getDate()
             val time = note.createdDate.getTime()
 
             noteCreated.text = "$date $time"
-
 
 
         } else {
@@ -161,22 +159,21 @@ class DEditNoteActivity : AppCompatActivity() {
 
         }
 
-        content.addTextChangedListener {
+        content.addTextChangedListener { content ->
 
 
-            len=it!!.length
-            if(it.toString().contains(" ") || it.toString().contains("\n"))
-            {
-                if(len != 0 ) {
-                    len-=it.toString().filter { it.toString() == " " }.count()
-                    len-=it.toString().filter { it.toString() == "\n" }.count()
+            len = content!!.length
+            if (content.toString().contains(" ") || content.toString().contains("\n")) {
+                if (len != 0) {
+                    len -= content.toString().filter { it.toString() == " " }.count()
+                    len -= content.toString().filter { it.toString() == "\n" }.count()
                 }
             }
 
 
 
 
-            if(it.toString().contains("\n")) Log.i("Edit_NS8","$len   || /$it/")
+
             characterCount.text = len.toString()
 
         }
@@ -191,11 +188,11 @@ class DEditNoteActivity : AppCompatActivity() {
 
                 when (it) {
                     true -> {
-                        Log.i("Edit","req...")
+
                         content.requestFocus()
                     }
                     false -> {
-                        Log.i("Edit","clear..")
+
                         content.clearFocus()
                     }
                 }
@@ -206,7 +203,6 @@ class DEditNoteActivity : AppCompatActivity() {
 
 
     }
-
 
 
     @SuppressLint("SetTextI18n")

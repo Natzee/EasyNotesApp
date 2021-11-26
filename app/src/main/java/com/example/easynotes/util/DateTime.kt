@@ -8,21 +8,15 @@ import java.util.*
 
 
 @SuppressLint("SimpleDateFormat")
-val date =  SimpleDateFormat("dd/MM/yyyy")
+val date = SimpleDateFormat("dd/MM/yyyy")
+
 @SuppressLint("SimpleDateFormat")
-val time  = SimpleDateFormat("hh:mm a")
+val time = SimpleDateFormat("hh:mm a")
 
 
+fun Long.getTime(): String = time.format(this)
 
-
-
-
-
-
-
-fun Long.getTime() : String = time.format(this)
-
-fun Long.getDate() : String = date.format(this)
+fun Long.getDate(): String = date.format(this)
 
 fun String.isToday(): Boolean = DateUtils.isToday(this.toLong())
 

@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var noteLiveList : MutableLiveData<MutableList<Note>> = MutableLiveData()
-    private var dbHelper :DbHelper = DbHelper(application,null)
+    private var noteLiveList: MutableLiveData<MutableList<Note>> = MutableLiveData()
+    private var dbHelper: DbHelper = DbHelper(application, null)
 
 
     init {
@@ -25,11 +25,11 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-   private  fun getNotesFromDb() {
+    private fun getNotesFromDb() {
 
-       viewModelScope.launch {
-           noteLiveList.value = dbHelper.getNotes()
-       }
+        viewModelScope.launch {
+            noteLiveList.value = dbHelper.getNotes()
+        }
 
     }
 
@@ -38,27 +38,26 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         return noteLiveList
     }
 
-    fun updateNote(note: Note,viewModelListener: ViewModelListener) {
+    fun updateNote(note: Note, viewModelListener: ViewModelListener) {
 
         val update = dbHelper.updateNotes(note)
 
-        viewModelListener.success(update,NotesDbOperation.UPDATE)
+        viewModelListener.success(update, NotesDbOperation.UPDATE)
     }
 
-    fun deleteNote(id : Int,viewModelListener: ViewModelListener) {
-      val delete =   dbHelper.deleteNotes(id)
-        viewModelListener.success(delete,NotesDbOperation.DELETE)
+    fun deleteNote(id: Int, viewModelListener: ViewModelListener) {
+        val delete = dbHelper.deleteNotes(id)
+        viewModelListener.success(delete, NotesDbOperation.DELETE)
 
     }
 
-    fun addNote(note: Note,viewModelListener: ViewModelListener)  {
+    fun addNote(note: Note, viewModelListener: ViewModelListener) {
 
         val add = dbHelper.addNotes(note)
 
-        viewModelListener.success(add,NotesDbOperation.ADD)
+        viewModelListener.success(add, NotesDbOperation.ADD)
 
     }
-
 
 
 }

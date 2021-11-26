@@ -10,7 +10,7 @@ object Constant {
     const val GRID_VIEW = 0
 
     //constant for shared preference key
-    const val MODE = "mode"
+
     const val VIEW_TYPE = "viewType"
     const val SHARED_PREFERENCE_NAME = "UserPreference"
 
@@ -43,6 +43,12 @@ object Constant {
     const val MENU_GRID_VIEW = "Grid view"
     const val MENU_NORMAL_MODE = "Normal Notes"
     const val MENU_SECRET_MODE = "Secret Notes"
+    const val MENU_UNSELECT = "Deselected"
+    const val MENU_SELECT = "Selected"
+    const val MENU_LOCK = "Lock"
+    const val MENU_UNLOCK = "Un Lock"
+    const val MENU_PIN = "Pin"
+    const val MENU_UNPIN = "Un Pin"
 
     //constant for dialog for delete
     const val ALERT_TITLE_DELETE = "Delete"
@@ -50,7 +56,7 @@ object Constant {
 
     //constant for dialog for show to enable secret feature
 
-    const val ALERT_TITLE_SECRET  = "Attention"
+    const val ALERT_TITLE_SECRET = "Attention"
     const val ALERT_MESSAGE_SECRET = "To Use Secret Mode Feature Make Sure Your Device is Protected"
 
 
@@ -65,7 +71,7 @@ object Constant {
 
     const val UNCHANGED_NOTES_MESSAGE = "Note Unchanged"
 
-    const val  ADD_NOTE_MESSAGE ="Note Added Successfully"
+    const val ADD_NOTE_MESSAGE = "Note Added Successfully"
 
     const val UPDATE_NOTE_MESSAGE = "Note Updated Successfully"
 
@@ -88,5 +94,6 @@ object Constant {
     //constant for Edit note activity toolbar name
 
     const val EDIT_NOTE_TOOL_BAR_NAME = "Edit Note"
+
 
 }

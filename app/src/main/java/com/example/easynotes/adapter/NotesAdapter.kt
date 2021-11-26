@@ -4,7 +4,6 @@ package com.example.easynotes.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.util.Log
 
 
 import android.view.LayoutInflater
@@ -47,7 +46,7 @@ class NotesAdapter(
         init {
 
             itemView.setOnClickListener {
-                Log.i("Letsfind","first")
+
                 if (isLongPress) {
                     if (!view.contains(it)) {
                         view.add(it)
@@ -166,11 +165,11 @@ class NotesAdapter(
 
 
 
-                if (listOfNotes[position].title.isEmpty()) {
-                    holder.title.visibility = View.GONE
-                } else {
-                    holder.title.text = listOfNotes[position].title
-                }
+            if (listOfNotes[position].title.isEmpty()) {
+                holder.title.visibility = View.GONE
+            } else {
+                holder.title.text = listOfNotes[position].title
+            }
 
 
 
@@ -202,12 +201,11 @@ class NotesAdapter(
 
 
             if (listOfNotes[position].title.isEmpty()) {
-                holder.title.setTypeface(holder.title.typeface,Typeface.NORMAL)
+                holder.title.setTypeface(holder.title.typeface, Typeface.NORMAL)
 
                 holder.title.text = listOfNotes[position].notes
-            }
-            else {
-                holder.title.setTypeface(holder.title.typeface,Typeface.BOLD)
+            } else {
+                holder.title.setTypeface(holder.title.typeface, Typeface.BOLD)
 
                 holder.title.text = listOfNotes[position].title
             }
@@ -234,8 +232,7 @@ class NotesAdapter(
             }
             if (listOfNotes[position].isPinned) {
                 holder.pinned.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 holder.pinned.visibility = View.GONE
             }
         }
@@ -244,7 +241,6 @@ class NotesAdapter(
     override fun getItemCount(): Int {
         return listOfNotes.size
     }
-
 
 
 }

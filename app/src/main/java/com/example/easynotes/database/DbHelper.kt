@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.content.contentValuesOf
 import com.example.easynotes.data.Note
-import com.example.easynotes.database.DatabaseContract.NotesTable
+
 
 class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLiteOpenHelper(
     context,
@@ -32,7 +32,7 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         db?.execSQL("DROP TABLE IF EXISTS ${NotesTable.TABLE_NAME}")
     }
 
-    fun addNotes(note: Note) : Boolean{
+    fun addNotes(note: Note): Boolean {
 
         val value = contentValuesOf()
         val db = this.writableDatabase
@@ -43,17 +43,17 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         value.put(NotesTable.PASSWORD_PROTECTED, note.isPasswordProtected.toInt())
         value.put(NotesTable.PINNED, note.isPinned.toInt())
         value.put(NotesTable.DATE_TIME, "${note.lastEdited}")
-        value.put(NotesTable.CREATED_DATE,"${note.createdDate}")
+        value.put(NotesTable.CREATED_DATE, "${note.createdDate}")
 
         val getId = db.insert(NotesTable.TABLE_NAME, null, value)
 
-       note.id = getId.toInt()
+        note.id = getId.toInt()
 
-        return getId>0
+        return getId > 0
 
     }
 
-    fun updateNotes(note: Note) : Boolean {
+    fun updateNotes(note: Note): Boolean {
         val db = this.writableDatabase
         val value = contentValuesOf()
         value.put(NotesTable.TITLE, note.title)
@@ -61,12 +61,17 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         value.put(NotesTable.PASSWORD_PROTECTED, note.isPasswordProtected.toInt())
         value.put(NotesTable.PINNED, note.isPinned.toInt())
         value.put(NotesTable.DATE_TIME, "${note.lastEdited}")
-       return db.update(NotesTable.TABLE_NAME, value, "${NotesTable.ID}=?", arrayOf(note.id.toString())) > 0
+        return db.update(
+            NotesTable.TABLE_NAME,
+            value,
+            "${NotesTable.ID}=?",
+            arrayOf(note.id.toString())
+        ) > 0
     }
 
-    fun deleteNotes(id: Int) :Boolean {
+    fun deleteNotes(id: Int): Boolean {
         val db = this.writableDatabase
-       return db.delete(NotesTable.TABLE_NAME, "${NotesTable.ID}=?", arrayOf(id.toString())) > 0
+        return db.delete(NotesTable.TABLE_NAME, "${NotesTable.ID}=?", arrayOf(id.toString())) > 0
     }
 
     fun getNotes(): ArrayList<Note> {
@@ -89,7 +94,15 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
                 val dateTime = cursor.getString(5)
                 val createDate = cursor.getString(6)
 
-                val note = Note(id, title, content,dateTime.toLong(), createDate.toLong() ,pinned, passwordProtected)
+                val note = Note(
+                    id,
+                    title,
+                    content,
+                    dateTime.toLong(),
+                    createDate.toLong(),
+                    pinned,
+                    passwordProtected
+                )
                 tempNotesList.add(note)
 
             } while (cursor.moveToNext())
