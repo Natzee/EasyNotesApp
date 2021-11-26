@@ -33,6 +33,7 @@ import com.yahiaangelo.markdownedittext.MarkdownEditText
 import com.yahiaangelo.markdownedittext.MarkdownStylesBar
 import java.util.*
 import com.example.easynotes.util.Constant.EDIT_NOTE_TOOL_BAR_NAME
+import com.example.easynotes.util.Constant.OPERATION_DENIED
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 
@@ -279,78 +280,94 @@ class DEditNoteActivity : AppCompatActivity() {
 
             R.id.pinned -> {
 
+                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                    note.isPinned = !note.isPinned
+                    if (note.isPinned) {
+                        item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unpin, null)
+                        Toast.makeText(this, "Note Pinned", Toast.LENGTH_SHORT).show()
+                    } else {
+                        item.icon = ResourcesCompat.getDrawable(resources, R.drawable.pin, null)
 
-                note.isPinned = !note.isPinned
-                if (note.isPinned) {
-                    item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unpin, null)
-                    Toast.makeText(this, "Note Pinned", Toast.LENGTH_SHORT).show()
-                } else {
-                    item.icon = ResourcesCompat.getDrawable(resources, R.drawable.pin, null)
-
-                    Toast.makeText(this, "Note UnPinned", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Note UnPinned", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                else{
+                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
+                }
+
             }
 
             R.id.secretNotes -> {
-                var flag = true
-                if (isSecretMode) {
-                    flag = true
-                } else {
-                    if (!isMobileSecured()) {
-                        flag = false
-                    }
-
-                }
-
-                if (flag) {
-                    note.isPasswordProtected = !note.isPasswordProtected
-                    if (note.isPasswordProtected) {
-                        Toast.makeText(this, "Note Moved to Secret", Toast.LENGTH_SHORT).show()
-                        item.icon = ResourcesCompat.getDrawable(resources, R.drawable.lock, null)
+                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                    var flag = true
+                    if (isSecretMode) {
+                        flag = true
                     } else {
-                        Toast.makeText(this, "Note Moved To Normal", Toast.LENGTH_SHORT).show()
-                        item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unlock, null)
+                        if (!isMobileSecured()) {
+                            flag = false
+                        }
+
                     }
-                } else {
-                    Toast.makeText(this, "Make Sure Your Mobile Is Secured", Toast.LENGTH_SHORT)
-                        .show()
+
+                    if (flag) {
+                        note.isPasswordProtected = !note.isPasswordProtected
+                        if (note.isPasswordProtected) {
+                            Toast.makeText(this, "Note Moved to Secret", Toast.LENGTH_SHORT).show()
+                            item.icon = ResourcesCompat.getDrawable(resources, R.drawable.lock, null)
+                        } else {
+                            Toast.makeText(this, "Note Moved To Normal", Toast.LENGTH_SHORT).show()
+                            item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unlock, null)
+                        }
+                    } else {
+                        Toast.makeText(this, "Make Sure Your Mobile Is Secured", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }else{
+                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
                 }
+
+
 
             }
 
 
             R.id.delete -> {
+                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                    val builder = AlertDialog.Builder(this)
 
-                val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Delete")
 
-                builder.setTitle("Delete")
-
-                builder.setMessage("Confirm Delete Note")
-
-
-                builder.setIcon(R.drawable.delete)
-                //performing positive action
-                builder.setPositiveButton("Yes") { _, _ ->
-
-                    title.setText("")
-                    content.setText("")
-                    isDeleteIconClicked = true
+                    builder.setMessage("Confirm Delete Note")
 
 
-                    onBackPressed()
+                    builder.setIcon(R.drawable.delete)
+                    //performing positive action
+                    builder.setPositiveButton("Yes") { _, _ ->
+
+                        title.setText("")
+                        content.setText("")
+                        isDeleteIconClicked = true
 
 
+                        onBackPressed()
+
+
+                    }
+
+                    //performing negative action
+                    builder.setNegativeButton("No") { _, _ ->
+
+                    }
+
+                    val alertDialog: AlertDialog = builder.create()
+
+                    alertDialog.setCancelable(false)
+                    alertDialog.show()
+
+
+                }else{
+                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
                 }
-
-                //performing negative action
-                builder.setNegativeButton("No") { _, _ ->
-
-                }
-
-                val alertDialog: AlertDialog = builder.create()
-
-                alertDialog.setCancelable(false)
-                alertDialog.show()
 
 
             }

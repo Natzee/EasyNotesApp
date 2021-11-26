@@ -67,7 +67,7 @@ object Constant {
     //toast message
     const val ENABLE_SECURITY = "Make Sure Your Mobile is Secured"
 
-    const val EMPTY_NOTE_MESSAGE = "Discard Empty Note"
+    const val EMPTY_NOTE_MESSAGE = "Discarded Empty Note"
 
     const val UNCHANGED_NOTES_MESSAGE = "Note Unchanged"
 
@@ -91,9 +91,13 @@ object Constant {
 
     const val NOTE_SWAP_TO_NORMAL_MODE = "Notes Added to Normal Mode"
 
+    const val OPERATION_DENIED = "Note is Empty"
+
     //constant for Edit note activity toolbar name
 
     const val EDIT_NOTE_TOOL_BAR_NAME = "Edit Note"
+
+
 
 
 }
