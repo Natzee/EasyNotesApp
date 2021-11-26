@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.KeyguardManager
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -706,7 +707,9 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
                             ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
 
                         for (i in 0 until recyclerViewNoteList.size) {
+                            Log.i("Position","$i")
                             if (!p.contains(i)) {
+                                Log.i("Position","$i -- stop")
                                 onNotesClickListener(i, true)
                                 NotesAdapter.view.add(notesContainer.getChildAt(i))
                                 notesContainer.getChildAt(i).background =
@@ -778,7 +781,8 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
 
         //check whether recycler view in multiple selection state
         if (isLongPress) {
-            setPos.add(position)
+
+            if(!setPos.contains(position)) setPos.add(position)
 
             if (actionMode == null) {
 
@@ -789,7 +793,10 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
             if (!noteList.contains(recyclerViewNoteList[position])) noteList.add(
                 recyclerViewNoteList[position]
             )
-            else noteList.remove(recyclerViewNoteList[position])
+            else {
+                noteList.remove(recyclerViewNoteList[position])
+                setPos.remove(position)
+            }
 
             if (noteList.size == recyclerViewNoteList.size) {
                 actionMode!!.menu.findItem(R.id.allselect).icon =
@@ -797,6 +804,8 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
                 actionMode!!.menu.findItem(R.id.allselect).title = MENU_UNSELECT
             }
             else{
+
+
                 actionMode!!.menu.findItem(R.id.allselect).icon =
                     ResourcesCompat.getDrawable(resources, R.drawable.selectall, null)
                 actionMode!!.menu.findItem(R.id.allselect).title = MENU_SELECT
