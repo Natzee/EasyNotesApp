@@ -342,7 +342,6 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
 
                 //add note to  db
                 //coroutine implementation required here
-
                 lifecycleScope.launch { noteViewModel.addNote(note, this@DMainActivity) }
 
 
@@ -1127,6 +1126,8 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
         }
 
     }
+
+
 
 
 }
