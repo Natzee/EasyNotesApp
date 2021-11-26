@@ -4,7 +4,7 @@ package com.example.easynotes.util
 import android.annotation.SuppressLint
 import android.text.format.DateUtils
 import java.text.SimpleDateFormat
-import java.util.*
+
 
 
 @SuppressLint("SimpleDateFormat")
