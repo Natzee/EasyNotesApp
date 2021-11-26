@@ -796,6 +796,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface, ViewModelListener
                     ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
                 actionMode!!.menu.findItem(R.id.allselect).title = MENU_UNSELECT
             }
+            else{
+                actionMode!!.menu.findItem(R.id.allselect).icon =
+                    ResourcesCompat.getDrawable(resources, R.drawable.selectall, null)
+                actionMode!!.menu.findItem(R.id.allselect).title = MENU_SELECT
+            }
 
             if (noteList.isEmpty()) {
                 actionMode!!.finish()
