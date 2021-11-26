@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Your First Note Here"
+        android:text="@string/firstNote"
 
         android:gravity="center"
         android:textSize="20sp"
@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First Note"
+        android:text="@string/openNote"
         android:textSize="25sp"
         android:textColor="@color/purple_700"
         android:layout_gravity="center_horizontal"

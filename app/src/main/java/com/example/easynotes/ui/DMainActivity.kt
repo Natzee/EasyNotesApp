@@ -1,5 +1,6 @@
 package com.example.easynotes.ui
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.KeyguardManager
 import android.content.Intent
@@ -22,7 +23,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.easynotes.ClickableInterface
+import com.example.easynotes.*
+import com.example.easynotes.Constant.ADD_NOTE_MESSAGE
 import com.example.easynotes.Constant.ALERT_SECRET_MESSAGE_KEY
 import com.example.easynotes.Constant.ALERT_MESSAGE_DELETE
 import com.example.easynotes.Constant.ALERT_MESSAGE_SECRET
@@ -30,6 +32,9 @@ import com.example.easynotes.Constant.ALERT_TITLE_DELETE
 import com.example.easynotes.Constant.ALERT_TITLE_SECRET
 import com.example.easynotes.Constant.DELETE_NOTE_MESSAGE
 import com.example.easynotes.Constant.ENABLE_SECURITY
+import com.example.easynotes.Constant.FAILED_ADD_NOTE_MESSAGE
+import com.example.easynotes.Constant.FAILED_DELETE_NOTE_MESSAGE
+import com.example.easynotes.Constant.FAILED_UPDATE_NOTE_MESSAGE
 
 import com.example.easynotes.Constant.GRID_VIEW
 import com.example.easynotes.Constant.IS_EMPTY
@@ -52,19 +57,21 @@ import com.example.easynotes.Constant.NOTE_SWAP_TO_SECRET_MODE
 import com.example.easynotes.Constant.NOTE_UNPINNED_MESSAGE
 import com.example.easynotes.Constant.SECRET_MODE
 import com.example.easynotes.Constant.SHARED_PREFERENCE_NAME
+import com.example.easynotes.Constant.UNCHANGED_NOTES_MESSAGE
+import com.example.easynotes.Constant.UPDATE_NOTE_MESSAGE
 
 import com.example.easynotes.Constant.VIEW_TYPE
-import com.example.easynotes.R
-import com.example.easynotes.SpacingDecorator
 import com.example.easynotes.adapter.NotesAdapter
 import com.example.easynotes.data.Note
+import com.example.easynotes.interfaces.ViewModelListener
 import com.example.easynotes.viewmodel.NotesViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 
-class DMainActivity : AppCompatActivity(), ClickableInterface {
+class DMainActivity : AppCompatActivity(), ClickableInterface,ViewModelListener {
 
+    private var setPos = ArrayList<Int>()
 
     //setting up which mode
     private var currentMode = NORMAL_MODE
@@ -239,6 +246,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
             }
 
 
+
         }
 
         item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
@@ -336,9 +344,12 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
                 //add note to  db
                 //coroutine implementation required here
 
-                lifecycleScope.launch { noteViewModel.addNote(note) }
+                lifecycleScope.launch { noteViewModel.addNote(note,this@DMainActivity) }
 
 
+            }
+            else{
+                Toast.makeText(this, Constant.EMPTY_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
             }
 
 
@@ -362,11 +373,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
 
                 //check for mode to delete from respective list if empty note
                 if (currentMode == NORMAL_MODE) {
-                    lifecycleScope.launch {  noteViewModel.deleteNote(normalNoteList[positionOfItem].id)}
+                    lifecycleScope.launch {  noteViewModel.deleteNote(normalNoteList[positionOfItem].id,this@DMainActivity)}
 
                     normalNoteList.removeAt(positionOfItem)
                 } else {
-                    lifecycleScope.launch { noteViewModel.deleteNote(secretNoteList[positionOfItem].id) }
+                    lifecycleScope.launch { noteViewModel.deleteNote(secretNoteList[positionOfItem].id,this@DMainActivity) }
 
                     secretNoteList.removeAt(positionOfItem)
                 }
@@ -424,11 +435,17 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
 
                     if (!isEmptyNote) {
 
-                        lifecycleScope.launch { noteViewModel.updateNote(note) }
+                        lifecycleScope.launch { noteViewModel.updateNote(note,this@DMainActivity) }
 
+                    }
+                    else{
+                        Toast.makeText(this, Constant.EMPTY_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
                     }
 
 
+                }
+                else{
+                    Toast.makeText(this, UNCHANGED_NOTES_MESSAGE,Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -592,6 +609,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
             inflater.inflate(R.menu.modifynote, menu)
 
             mode.title = "1 Item Selected"
+
+            when(currentMode){
+                NORMAL_MODE -> mode.menu.findItem(R.id.lock).title = "Lock"
+                SECRET_MODE -> mode.menu.findItem(R.id.lock).title = "Un Lock"
+            }
             return true
         }
 
@@ -603,6 +625,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
         }
 
 
+        @SuppressLint("UseCompatLoadingForDrawables")
         override fun onActionItemClicked(
             mode: ActionMode?,
             item: MenuItem?
@@ -618,6 +641,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
                     var flag = true
                     if (currentMode == SECRET_MODE) {
                         flag = false
+
                         swapBetweenNormalAndSecret()
                     }
 
@@ -654,9 +678,43 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
                         "$ALERT_MESSAGE_DELETE ${noteList.size} $singularPlural"
                     )
 
-                    mode!!.finish()
+
                     true
                 }
+
+                R.id.allselect ->{
+
+                    val p = setPos
+                    if(item.title == "DeSelect"){
+                        item.title = "Select"
+                        item.icon=ResourcesCompat.getDrawable(resources, R.drawable.selectall, null)
+                        mode!!.finish()
+
+
+
+
+
+                    }
+
+                    else{
+                        item.title = "DeSelect"
+                        item.icon=ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
+
+                        for(i in 0 until recyclerViewNoteList.size){
+                            if(!p.contains(i)) {
+                                onNotesClickListener(i,true)
+                                NotesAdapter.view.add(notesContainer.getChildAt(i))
+                                notesContainer.getChildAt(i).background = resources.getDrawable(R.color.transparent, null)
+                            }
+
+                        }
+
+                    }
+
+
+                    true
+                }
+
 
 
                 else -> {
@@ -672,6 +730,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
             actionMode = null
             updateRecyclerView()
             //displayNotes()
+            setPos.clear()
             NotesAdapter.isLongPress = false
             NotesAdapter.view.clear()
 
@@ -713,10 +772,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
 
 
     override fun onNotesClickListener(position: Int, isLongPress: Boolean) {
+        Log.i("Letsfind","second")
 
         //check whether recycler view in multiple selection state
         if (isLongPress) {
-
+            setPos.add(position)
 
             if (actionMode == null) {
 
@@ -724,18 +784,23 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
                 noteList.clear()
             }
 
-            if (!noteList.contains(recyclerViewNoteList[position])) noteList.add(
-                recyclerViewNoteList[position]
+            if (!noteList.contains(recyclerViewNoteList[position])) noteList.add(recyclerViewNoteList[position]
             )
             else noteList.remove(recyclerViewNoteList[position])
 
+            if(noteList.size == recyclerViewNoteList.size) {
+                actionMode!!.menu.findItem(R.id.allselect).icon =
+                    ResourcesCompat.getDrawable(resources, R.drawable.deselectall, null)
+                actionMode!!.menu.findItem(R.id.allselect).title = "DeSelect"
+            }
 
-            if (noteList.isEmpty()) {
-                actionMode!!.finish()
+           if (noteList.isEmpty()) {
+               actionMode!!.finish()
             } else {
                 actionMode!!.title = "${noteList.size} Item Selected"
 
             }
+
 
 
             var flag = false
@@ -744,11 +809,13 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
                     flag = true
                     actionMode!!.menu.findItem(R.id.pin).icon =
                         ResourcesCompat.getDrawable(resources, R.drawable.pin, null)
+                    actionMode!!.menu.findItem(R.id.pin).title = "Pin"
                     pinnedIconState = true
                 } else {
                     if (!flag) {
                         actionMode!!.menu.findItem(R.id.pin).icon =
                             ResourcesCompat.getDrawable(resources, R.drawable.unpin, null)
+                        actionMode!!.menu.findItem(R.id.pin).title = "Un Pin"
                         pinnedIconState = false
                     }
                 }
@@ -799,11 +866,11 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
         else Toast.makeText(this, DELETE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
         //delete note in db
         //coroutine implementation required
-
+        actionMode!!.finish()
         lifecycleScope.launch { for (i in noteList) {
 
 
-            noteViewModel.deleteNote(i.id)
+            noteViewModel.deleteNote(i.id,this@DMainActivity)
         }
             noteList.clear()
         }
@@ -853,8 +920,9 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
 
         //update note in db
         //coroutine implementation required
-        lifecycleScope.launch {  for (i in noteList) {
-            noteViewModel.updateNote(i)
+        lifecycleScope.launch {
+            for (i in noteList) {
+            noteViewModel.updateNote(i,this@DMainActivity)
         }
             noteList.clear()
         }
@@ -926,7 +994,7 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
         //coroutine implementation required
         lifecycleScope.launch {for (i in noteList) {
 
-            noteViewModel.updateNote(i)
+            noteViewModel.updateNote(i,this@DMainActivity)
         }
             noteList.clear()
         }
@@ -1021,7 +1089,26 @@ class DMainActivity : AppCompatActivity(), ClickableInterface {
         alertDialog.show()
     }
 
+    override fun success(result: Boolean, operation: NotesDbOperation) {
 
+        when(operation){
+            NotesDbOperation.ADD->{
+                    if(result) Toast.makeText(this, ADD_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_ADD_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+            }
+            NotesDbOperation.UPDATE ->{
+                if(result) Toast.makeText(this, UPDATE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_UPDATE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+            }
+            NotesDbOperation.DELETE ->{
+                if(result) Toast.makeText(this, DELETE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this, FAILED_DELETE_NOTE_MESSAGE,Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
+
+    }
 
 
 }

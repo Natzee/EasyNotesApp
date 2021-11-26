@@ -11,11 +11,15 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:hint="Title"
+        android:layout_height="wrap_content"
+
+        android:minHeight="70dp"
+        android:hint="@string/titleHint"
+
+
         android:textStyle="bold"
         android:textSize="20sp"
-        android:inputType="text"
+       android:inputType="text"
         android:id="@+id/title"
         android:padding="5dp"
 
@@ -26,14 +30,23 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/created_at"
+            android:padding="5dp"
+            />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/noteCreated"
 
-        android:text="25/11/2021 21:32 PM"
+
         android:textSize="12sp"
         android:padding="5dp"
+
 
 
 
@@ -44,16 +57,16 @@
 
             android:layout_width="wrap_content"
             android:padding="5dp"
-            android:text="|"
+            android:text="@string/seprator"
             android:layout_height="match_parent"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/characterCount"
-
-            android:text="0"
             android:textSize="12sp"
+            android:text="@string/defaultCharacterCount"
+
             android:padding="5dp"
 
 
@@ -63,8 +76,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="Characters"
+            android:textSize="12sp"
+            android:text="@string/characters"
             />
 
 
@@ -72,7 +85,7 @@
     </LinearLayout>
     <com.yahiaangelo.markdownedittext.MarkdownEditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/content"
         android:textColor="@color/black"
 

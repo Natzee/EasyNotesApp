@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Easy Notes</string>
+    <string name="created_at">Created at :</string>
+    <string name="characters">Characters</string>
+    <string name="defaultCharacterCount">0</string>
+    <string name="seprator">|</string>
+    <string name="titleHint">Title</string>
+    <string name="addnotes">AddNotes</string>
+    <string name="dontShowAgain">Don\'t Show Again</string>
+    <string name="firstNote">Create Your First Note Here</string>
+    <string name="openNote">First Note</string>
+    <string name="pinningoperation">pinningOperation</string>
+    <string name="noResult">No Search Message</string>
+    <string name="noNote">No Note Found</string>
+    <string name="pin">Pin</string>
+    <string name="lock">Lock</string>
+    <string name="select">Select</string>
+    <string name="delete">Delete</string>
 </resources>

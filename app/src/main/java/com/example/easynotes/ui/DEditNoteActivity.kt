@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -69,6 +70,7 @@ class DEditNoteActivity : AppCompatActivity() {
     private lateinit var characterCount : TextView
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_notes)
@@ -102,12 +104,21 @@ class DEditNoteActivity : AppCompatActivity() {
 
             content.renderMD(note.notes)
 
+            val tempNote = note.notes.replace(" ","")
 
-            updateCreatedDateTime()
+
+            characterCount.text=(tempNote.length).toString()
+
+            val date = note.createdDate.getDate()
+            val time = note.createdDate.getTime()
+
+            noteCreated.text = "$date $time"
+
 
 
         } else {
             note = Note()
+            updateCreatedDateTime()
             resultCode = NEW_NOTE
         }
 
@@ -126,6 +137,8 @@ class DEditNoteActivity : AppCompatActivity() {
             if (hasFocus) {
                 isContentFocused = false
                 isTitleFocused = true
+
+
                 if (stylesBar.visibility == View.VISIBLE) stylesBar.visibility = View.GONE
 
             } else {
@@ -135,6 +148,11 @@ class DEditNoteActivity : AppCompatActivity() {
 
 
         }
+
+
+
+
+
         content.setOnFocusChangeListener { _, hasFocus ->
 
 
@@ -155,13 +173,18 @@ class DEditNoteActivity : AppCompatActivity() {
 
 
             len=it!!.length
-            if(it.toString().contains(" "))
+            if(it.toString().contains(" ") || it.toString().contains("\n"))
             {
-                if(len != 0 ) len-=it.toString().filter { it.toString() == " " }.count()
+                if(len != 0 ) {
+                    len-=it.toString().filter { it.toString() == " " }.count()
+                    len-=it.toString().filter { it.toString() == "\n" }.count()
+                }
             }
 
 
-            Log.i("Edit_NS","$len   || /$it/")
+
+
+            if(it.toString().contains("\n")) Log.i("Edit_NS8","$len   || /$it/")
             characterCount.text = len.toString()
 
         }
@@ -196,8 +219,8 @@ class DEditNoteActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updateCreatedDateTime() {
-        var flag = false
 
+        note.createdDate = Calendar.getInstance().timeInMillis
         val date = note.createdDate.getDate()
         val time = note.createdDate.getTime()
 
@@ -365,17 +388,12 @@ class DEditNoteActivity : AppCompatActivity() {
 
             val positionOfItem = intent.getIntExtra(ITEM_POSITION, -1)
             intent1.putExtra(ITEM_POSITION, positionOfItem)
-            if (isDeleteIconClicked) Toast.makeText(
-                this,
-                DELETE_NOTE_MESSAGE.replace("s", ""),
-                Toast.LENGTH_SHORT
-            ).show()
-            else Toast.makeText(this, EMPTY_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
+
 
             intent1.putExtra(IS_EMPTY, true)
         } else if (title == note.title && c == note.notes && defaultPasswordProtection == note.isPasswordProtected && defaultPinnedState == note.isPinned) {
 
-            Toast.makeText(this, UNCHANGED_NOTES_MESSAGE, Toast.LENGTH_SHORT).show()
+
             intent1.putExtra(IS_MODIFIED, false)
         } else {
             intent1.putExtra(IS_EMPTY, false)
@@ -386,13 +404,7 @@ class DEditNoteActivity : AppCompatActivity() {
                 note.title = title
                 note.notes = c
 
-                if (note.lastEdited == 0L) {
 
-                    note.createdDate = Calendar.getInstance().timeInMillis
-                    Toast.makeText(this, ADD_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, UPDATE_NOTE_MESSAGE, Toast.LENGTH_SHORT).show()
-                }
                 note.lastEdited = Calendar.getInstance().timeInMillis
 
             }

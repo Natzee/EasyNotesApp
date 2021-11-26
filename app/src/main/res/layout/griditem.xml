@@ -1,65 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="170dp"
-    android:maxHeight="200dp"
-    android:elevation="10dp"
     android:layout_height="wrap_content"
+    android:elevation="10dp"
+    android:maxHeight="200dp"
+    android:layout_margin="1dp"
+    android:orientation="vertical"
     app:cardCornerRadius="10dp">
+
     <ImageView
+        android:id="@+id/pinnedrv"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:src="@drawable/pinrv"
         android:layout_gravity="top|end"
-android:visibility="gone"
-        android:id="@+id/pinnedrv"
-        />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxHeight="50dp"
-android:textColor="@color/black"
-        android:padding="5dp"
-        android:id="@+id/title"
-        android:layout_margin="5dp"
-
-        />
-
-
-    <TextView
-        android:id="@+id/notes"
-        android:layout_width="match_parent"
-        android:maxHeight="100dp"
-        android:textColor="@color/black"
-        android:layout_height="wrap_content"
-      android:layout_margin="5dp"
-        android:padding="5dp"
-
-
-         />
-    <com.yahiaangelo.markdownedittext.MarkdownEditText
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:id="@+id/notes_sample"
+        android:src="@drawable/pinrv"
         android:visibility="gone"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:layout_weight="1"
-        android:gravity="top"/>
+        android:contentDescription="@string/pinningoperation" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dateTime"
-        android:maxLength="20"
-        android:textColor="@color/purple_200"
-        android:layout_gravity="center"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:maxLines="7"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+
+            />
+
+
+        <TextView
+            android:id="@+id/notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:maxLines="7"
+            android:padding="5dp"
+            android:textColor="@color/black"
+
+
+            />
+
+        <com.yahiaangelo.markdownedittext.MarkdownEditText
+            android:id="@+id/notes_sample"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:padding="5dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/dateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLength="20"
+            android:textColor="@color/purple_200" />
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

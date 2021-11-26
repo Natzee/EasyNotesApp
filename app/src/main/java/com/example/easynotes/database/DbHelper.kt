@@ -32,7 +32,7 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         db?.execSQL("DROP TABLE IF EXISTS ${NotesTable.TABLE_NAME}")
     }
 
-    fun addNotes(note: Note) {
+    fun addNotes(note: Note) : Boolean{
 
         val value = contentValuesOf()
         val db = this.writableDatabase
@@ -45,12 +45,15 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         value.put(NotesTable.DATE_TIME, "${note.lastEdited}")
         value.put(NotesTable.CREATED_DATE,"${note.createdDate}")
 
-       note.id =  db.insert(NotesTable.TABLE_NAME, null, value).toInt()
+        val getId = db.insert(NotesTable.TABLE_NAME, null, value)
 
+       note.id = getId.toInt()
+
+        return getId>0
 
     }
 
-    fun updateNotes(note: Note) {
+    fun updateNotes(note: Note) : Boolean {
         val db = this.writableDatabase
         val value = contentValuesOf()
         value.put(NotesTable.TITLE, note.title)
@@ -58,12 +61,12 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
         value.put(NotesTable.PASSWORD_PROTECTED, note.isPasswordProtected.toInt())
         value.put(NotesTable.PINNED, note.isPinned.toInt())
         value.put(NotesTable.DATE_TIME, "${note.lastEdited}")
-        db.update(NotesTable.TABLE_NAME, value, "${NotesTable.ID}=?", arrayOf(note.id.toString()))
+       return db.update(NotesTable.TABLE_NAME, value, "${NotesTable.ID}=?", arrayOf(note.id.toString())) > 0
     }
 
-    fun deleteNotes(id: Int) {
+    fun deleteNotes(id: Int) :Boolean {
         val db = this.writableDatabase
-        db.delete(NotesTable.TABLE_NAME, "${NotesTable.ID}=?", arrayOf(id.toString()))
+       return db.delete(NotesTable.TABLE_NAME, "${NotesTable.ID}=?", arrayOf(id.toString())) > 0
     }
 
     fun getNotes(): ArrayList<Note> {
@@ -74,6 +77,8 @@ class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) : SQLit
 
         val query = "SELECT * FROM ${NotesTable.TABLE_NAME} ORDER BY ${NotesTable.PINNED} = 1 DESC"
         val cursor = db.rawQuery(query, null)
+
+
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(0)

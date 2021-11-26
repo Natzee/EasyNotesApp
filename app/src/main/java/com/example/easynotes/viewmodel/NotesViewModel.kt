@@ -6,9 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.easynotes.NotesDbOperation
 
 import com.example.easynotes.data.Note
 import com.example.easynotes.database.DbHelper
+import com.example.easynotes.interfaces.ViewModelListener
 import kotlinx.coroutines.launch
 
 class NotesViewModel(application: Application) : AndroidViewModel(application) {
@@ -36,11 +38,26 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         return noteLiveList
     }
 
-    fun updateNote(note: Note) = dbHelper.updateNotes(note)
+    fun updateNote(note: Note,viewModelListener: ViewModelListener) {
 
-    fun deleteNote(id : Int) = dbHelper.deleteNotes(id)
+        val update = dbHelper.updateNotes(note)
 
-    fun addNote(note: Note) = dbHelper.addNotes(note)
+        viewModelListener.success(update,NotesDbOperation.UPDATE)
+    }
+
+    fun deleteNote(id : Int,viewModelListener: ViewModelListener) {
+      val delete =   dbHelper.deleteNotes(id)
+        viewModelListener.success(delete,NotesDbOperation.DELETE)
+
+    }
+
+    fun addNote(note: Note,viewModelListener: ViewModelListener)  {
+
+        val add = dbHelper.addNotes(note)
+
+        viewModelListener.success(add,NotesDbOperation.ADD)
+
+    }
 
 
 

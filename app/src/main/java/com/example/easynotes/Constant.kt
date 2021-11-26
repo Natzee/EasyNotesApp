@@ -75,6 +75,11 @@ object Constant {
 
     const val NOTE_UNPINNED_MESSAGE = "Notes Un Pinned"
 
+    const val FAILED_ADD_NOTE_MESSAGE = "Failed to Add Note"
+
+    const val FAILED_UPDATE_NOTE_MESSAGE = "Failed to Update Note"
+
+    const val FAILED_DELETE_NOTE_MESSAGE = "Failed to Delete Note"
 
     const val NOTE_SWAP_TO_SECRET_MODE = "Notes Added to Secret Note"
 
