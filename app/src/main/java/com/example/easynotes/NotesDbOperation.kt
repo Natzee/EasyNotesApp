@@ -1,6 +1,6 @@
 package com.example.easynotes
 
-enum class NotesDbOperation() {
+enum class NotesDbOperation {
 
     ADD,
     UPDATE,

@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.app.KeyguardManager
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
