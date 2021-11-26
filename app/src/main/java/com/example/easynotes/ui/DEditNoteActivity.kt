@@ -280,7 +280,7 @@ class DEditNoteActivity : AppCompatActivity() {
 
             R.id.pinned -> {
 
-                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                if (title.text.toString().isNotEmpty() || content.getMD().isNotEmpty()) {
                     note.isPinned = !note.isPinned
                     if (note.isPinned) {
                         item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unpin, null)
@@ -290,15 +290,14 @@ class DEditNoteActivity : AppCompatActivity() {
 
                         Toast.makeText(this, "Note UnPinned", Toast.LENGTH_SHORT).show()
                     }
-                }
-                else{
-                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, OPERATION_DENIED, Toast.LENGTH_SHORT).show()
                 }
 
             }
 
             R.id.secretNotes -> {
-                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                if (title.text.toString().isNotEmpty() || content.getMD().isNotEmpty()) {
                     var flag = true
                     if (isSecretMode) {
                         flag = true
@@ -313,26 +312,27 @@ class DEditNoteActivity : AppCompatActivity() {
                         note.isPasswordProtected = !note.isPasswordProtected
                         if (note.isPasswordProtected) {
                             Toast.makeText(this, "Note Moved to Secret", Toast.LENGTH_SHORT).show()
-                            item.icon = ResourcesCompat.getDrawable(resources, R.drawable.lock, null)
+                            item.icon =
+                                ResourcesCompat.getDrawable(resources, R.drawable.lock, null)
                         } else {
                             Toast.makeText(this, "Note Moved To Normal", Toast.LENGTH_SHORT).show()
-                            item.icon = ResourcesCompat.getDrawable(resources, R.drawable.unlock, null)
+                            item.icon =
+                                ResourcesCompat.getDrawable(resources, R.drawable.unlock, null)
                         }
                     } else {
                         Toast.makeText(this, "Make Sure Your Mobile Is Secured", Toast.LENGTH_SHORT)
                             .show()
                     }
-                }else{
-                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, OPERATION_DENIED, Toast.LENGTH_SHORT).show()
                 }
-
 
 
             }
 
 
             R.id.delete -> {
-                if(title.text.toString().isNotEmpty()||content.getMD().isNotEmpty()){
+                if (title.text.toString().isNotEmpty() || content.getMD().isNotEmpty()) {
                     val builder = AlertDialog.Builder(this)
 
                     builder.setTitle("Delete")
@@ -365,8 +365,8 @@ class DEditNoteActivity : AppCompatActivity() {
                     alertDialog.show()
 
 
-                }else{
-                    Toast.makeText(this, OPERATION_DENIED,Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, OPERATION_DENIED, Toast.LENGTH_SHORT).show()
                 }
 
 

@@ -6,7 +6,6 @@ import android.text.format.DateUtils
 import java.text.SimpleDateFormat
 
 
-
 @SuppressLint("SimpleDateFormat")
 val date = SimpleDateFormat("dd/MM/yyyy")
 

@@ -98,6 +98,4 @@ object Constant {
     const val EDIT_NOTE_TOOL_BAR_NAME = "Edit Note"
 
 
-
-
 }
